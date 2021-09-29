@@ -23,3 +23,7 @@ export interface Users {
 export interface ReqUsers extends Request {
     user?: Users
 }
+export interface Categories {
+    id: number,
+    name: string
+}

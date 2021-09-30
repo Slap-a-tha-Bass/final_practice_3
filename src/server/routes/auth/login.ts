@@ -2,7 +2,6 @@ import * as express from 'express';
 import * as passport from 'passport';
 import * as jwt from 'jsonwebtoken';
 import { ReqUsers } from '../../../../types';
-import db_users from '../../db/queries/users';
 import { jwtConfig } from '../../config';
 
 const router = express.Router();

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import { Books, Categories } from '../../../types'
 import Layout from '../components/Layout';
 import { apiService } from '../utils/api-service';
 const Home = () => {
-
+    const history = useHistory();
     const [values, setValues] = useState<Books>({});
 
     const handleChanges = e => setValues(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -14,10 +15,16 @@ const Home = () => {
         apiService('/api/categories')
             .then(data => setCategories(data))
     }, [])
-    const handleSelect = () => {
-
+    const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setCategoryid(Number(e.target.value))
     }
-
+    const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        apiService('/api/books', 'POST', { categoryid })
+            .then(data => {
+                history.push('/books')
+            })
+    }
     return (
         <Layout>
             <form className="form-group">
@@ -45,7 +52,7 @@ const Home = () => {
                     className="form-control"
                     name="price"
                 />
-                <select >
+                <select onChange={handleSelect}>
                     <option value="0">Choose Genre</option>
                     {categories.map((category) => (
                         <option key={category.id} value={category.id}>

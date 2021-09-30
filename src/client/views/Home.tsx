@@ -5,22 +5,20 @@ import Layout from '../components/Layout';
 import { apiService } from '../utils/api-service';
 const Home = () => {
     const history = useHistory();
-    const [values, setValues] = useState<Books>({});
+    const [values, setValues] = useState<{ [key: string]: string }>({});
+    
+    const handleChanges = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => setValues(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
-    const handleChanges = e => setValues(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
-    const [categoryid, setCategoryid] = useState<Categories['id']>();
     const [categories, setCategories] = useState<Categories[]>([]);
     useEffect(() => {
         apiService('/api/categories')
             .then(data => setCategories(data))
     }, [])
-    const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setCategoryid(Number(e.target.value))
-    }
+
     const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        apiService('/api/books', 'POST', { categoryid })
+        apiService('/api/books', 'POST', { title: values.title, author: values.author, price: values.price, categoryid: values.categoryid })
             .then(data => {
                 history.push('/books')
             })
@@ -30,38 +28,38 @@ const Home = () => {
             <form className="form-group">
                 <label htmlFor="">Title</label>
                 <input
-                    // value={}
-                    // onChange={}
+                    value={values.title || ''}
+                    onChange={handleChanges}
                     type="text"
                     className="form-control"
                     name="title"
                 />
                 <label htmlFor="">Author</label>
                 <input
-                    // value={}
-                    // onChange={} 
+                    value={values.author || ''}
+                    onChange={handleChanges} 
                     type="text"
                     className="form-control"
                     name="author"
                 />
                 <label htmlFor="">Price</label>
                 <input
-                    // value={}
-                    // onChange={}
+                    value={values.price || ''}
+                    onChange={handleChanges}
                     type="text"
                     className="form-control"
                     name="price"
                 />
-                <select onChange={handleSelect}>
+                <select onChange={handleChanges} name="categoryid">
                     <option value="0">Choose Genre</option>
-                    {categories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                            {category.name}
+                    {categories.map((values) => (
+                        <option key={values.id} value={values.id} >
+                            {values.name}
                         </option>
                     ))}
                 </select>
                 <div>
-                    <button className="btn btn-primary">submit</button>
+                    <button onClick={handleSubmit} className="btn btn-primary">submit</button>
                 </div>
             </form>
         </Layout>

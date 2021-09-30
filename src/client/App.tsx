@@ -1,14 +1,38 @@
 import * as React from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import BookDetails from './views/BookDetails';
+import Books from './views/Books';
+import Home from './views/Home';
+import Login from './views/Login';
+import Register from './views/Register';
 
 const App = (props: AppProps) => {
-	
+
 	return (
-		<main className="container my-5">
-			<h1 className="text-primary text-center"></h1>
-		</main>
+		<BrowserRouter>
+			<Navbar />
+			<Switch>
+				<Route exact path ="/">
+					<Home />
+				</Route>
+				<Route exact path ="/books">
+					<Books />
+				</Route>
+				<Route exact path ="/books/:id">
+					<BookDetails />
+				</Route>
+				<Route exact path ="/login">
+					<Login />
+				</Route>
+				<Route exact path ="/register">
+					<Register />
+				</Route>
+			</Switch>
+		</BrowserRouter>
 	);
 };
 
-interface AppProps {}
+interface AppProps { }
 
 export default App;

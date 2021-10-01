@@ -8,7 +8,7 @@ const Login = () => {
     const history = useHistory();
     const { values, handleChanges, clear } = useForm();
     
-    const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if(!values){
             alert('Oops, fill out required fields!');

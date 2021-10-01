@@ -8,21 +8,31 @@ const Register = () => {
     const history = useHistory();
     const { values, handleChanges, clear } = useForm();
     
-    const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if(!values){
             alert('Oops, fill out required fields!');
             return;
         }
-        apiService('/api/users', 'POST', { email: values.email, password: values.password, role: 'guest' })
-            .then(data => {
+        apiService('/auth/register', 'POST', { email: values.email, password: values.password, role: 'guest', name: values.name })
+            .then(token => {
+                localStorage.setItem('token', token.token),
                 clear(),
-                history.push('/profile')
+                history.push('/'),
+                console.log(token.token, values.name, values.email, values.password)
             })
     }
     return (
         <Layout>
             <form className="form-group">
+                <label>Name</label>
+                <input 
+                value={values.name || ''}
+                onChange={handleChanges}
+                type="text" 
+                className="form-control"
+                name="name" 
+                />
                 <label>Email</label>
                 <input 
                 value={values.email || ''}
@@ -39,7 +49,11 @@ const Register = () => {
                 className="form-control" 
                 name="password"
                 />
-                <button onClick={handleLogin} className="btn btn-primary">Login</button>
+                <button 
+                onClick={handleRegister} 
+                className="btn btn-primary">
+                    Register
+                </button>
             </form>
         </Layout>
     )

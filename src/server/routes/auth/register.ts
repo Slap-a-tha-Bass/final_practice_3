@@ -18,11 +18,12 @@ router.post('/', async (req: ReqUsers, res) => {
         const newUser = { email, password: hashed, name, role: 'guest' };
         const register = await db_users.insert(newUser);
 
-        const token = jwt.sign({ userid: req.user.id, email: req.user.email, role: 'guest'},
+        const token = jwt.sign({ userid: register.insertId, email, role: 'guest'},
         jwtConfig.secret,
         {expiresIn: jwtConfig.expires});
 
         res.json({token, register});
+        console.log({token, register});
     } catch (error) {
         res.status(500).json({ message: 'Problem registering', error: error.message})
     }
